@@ -1,0 +1,59 @@
+# Unity generated folders
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+/[Mm]emoryCaptures/
+/[Rr]ecordings/
+
+# Asset Store tools
+/Assets/AssetStoreTools*
+
+# Large imported art is kept locally and omitted from the portfolio repository.
+# Keep the small gameplay data spreadsheets for design/reference.
+/Assets/ArtRes/*
+!/Assets/ArtRes/Excel.meta
+!/Assets/ArtRes/Excel/
+!/Assets/ArtRes/Excel/**
+
+# IDE generated files
+/.vs/
+/.vscode/
+/.idea/
+*.csproj
+*.sln
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# Unity generated metadata
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+
+# Crash reports and temporary files
+sysinfo.txt
+crashlytics-build.properties
+*.tmp
+*.bak
+
+# Builds
+*.apk
+*.aab
+*.app
+*.unitypackage
+
+# OS generated files
+.DS_Store
+Thumbs.db
+Desktop.ini
