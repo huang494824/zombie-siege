@@ -20,7 +20,7 @@ public class CameraMove : MonoBehaviour
     private Quaternion targetRotation;
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
         if (target == null)
             return;
