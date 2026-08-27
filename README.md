@@ -5,6 +5,21 @@
 > 当前项目版本：`1.0`  
 > 推荐 Unity 版本：`2022.3.62f3`
 
+## 运行架构
+```mermaid
+flowchart LR
+    A[BeginScene] --> B[选择英雄]
+    B --> C[选择关卡]
+    C --> D[GameLevelMgr 初始化]
+    D --> E[创建玩家和战斗 UI]
+    D --> F[MonsterPoint 波次生成]
+    F --> G[玩家与炮塔攻击]
+    G --> H{结算条件}
+    H -->|怪物清空| I[胜利结算]
+    H -->|核心归零| J[失败结算]
+    I --> K[保存金币并返回菜单]
+    J --> K
+```
 ## 游戏玩法
 
 一局游戏的基本流程如下：
@@ -117,7 +132,6 @@ Assets/
 │  ├─ GameScene/           # 波次、建造点、战斗对象、摄像机和战斗 UI
 │  ├─ Json/                # JSON 读取、保存与 LitJson
 │  ├─ UI/                  # 通用面板基类和 UI 管理器
-│  ├─ GameFrameSetting.cs  # 目标帧率设置
 │  └─ Main.cs              # 主菜单 UI 入口
 └─ StreamingAssets/        # 可编辑的默认游戏配置 JSON
 ```

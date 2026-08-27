@@ -2566,7 +2566,7 @@ GameObject:
   - component: {fileID: -8791957156084888143}
   m_Layer: 0
   m_Name: 3
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2646,6 +2646,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   money: 0
   gunPoint: {fileID: 1132745919197990556}
+  shootRayHeight: 0.9
+  shootRadius: 0.25
 --- !u!143 &-8791957156084888143
 CharacterController:
   m_ObjectHideFlags: 0
@@ -3320,6 +3322,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 58783c040727c42488d50ed002a8ad86, type: 3}
       propertyPath: m_Name
       value: weapon_rocket_launcher
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 58783c040727c42488d50ed002a8ad86, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 58783c040727c42488d50ed002a8ad86, type: 3}
       propertyPath: m_LocalPosition.x
