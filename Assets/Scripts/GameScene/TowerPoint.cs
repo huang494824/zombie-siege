@@ -54,6 +54,10 @@ public class TowerPoint : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        //只检测玩家进入
+        if (!other.CompareTag("Player"))
+            return;
+
         //如果现在已经有塔了 就没有必要再显示升级界面 或者造塔界面了
         if (nowTowerInfo != null && nowTowerInfo.nextLev == 0)
             return;
@@ -62,6 +66,9 @@ public class TowerPoint : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+        if (!other.CompareTag("Player"))
+            return;
+
         //如果不希望游戏界面下方的造塔界面显示 直接传空
         UIManager.Instance.GetPanel<GamePanel>().UpdateSelTower(null);
     }

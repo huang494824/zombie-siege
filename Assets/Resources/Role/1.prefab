@@ -1288,7 +1288,7 @@ GameObject:
   - component: {fileID: -707807179634925941}
   m_Layer: 0
   m_Name: 1
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1368,6 +1368,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   money: 0
   gunPoint: {fileID: 0}
+  shootRayHeight: 0.9
+  shootRadius: 0.25
 --- !u!143 &-707807179634925941
 CharacterController:
   m_ObjectHideFlags: 0
@@ -3289,6 +3291,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 75061fe987d18a84b8bd0305c9330545, type: 3}
       propertyPath: m_Name
       value: weapon_knife
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 75061fe987d18a84b8bd0305c9330545, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 75061fe987d18a84b8bd0305c9330545, type: 3}
       propertyPath: m_LocalPosition.x
