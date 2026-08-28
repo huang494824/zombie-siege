@@ -63,9 +63,23 @@ public class MonsterPoint : MonoBehaviour
         MonsterInfo info = GameDataMgr.Instance.monsterInfoList[nowID - 1];
 
         //创建怪物预设体
-        GameObject obj = Instantiate(Resources.Load<GameObject>(info.res),this.transform.position,Quaternion.identity);
-        //为我们创建出的怪物预设体 添加怪物脚本 进行初始化
-        MonsterObject monsterObj = obj.AddComponent<MonsterObject>();
+        //GameObject obj = Instantiate(Resources.Load<GameObject>(info.res),this.transform.position,Quaternion.identity);
+        ////为我们创建出的怪物预设体 添加怪物脚本 进行初始化
+        //MonsterObject monsterObj = obj.AddComponent<MonsterObject>();
+        //monsterObj.InitInfo(info);
+
+        //从对象池中获取怪物
+        GameObject obj = PoolMgr.Instance.GetObj(
+            info.res,
+            this.transform.position,
+            Quaternion.identity
+        );
+
+        //第一次创建时添加怪物脚本 之后复用时不再重复添加
+        MonsterObject monsterObj = obj.GetComponent<MonsterObject>();
+        if (monsterObj == null)
+            monsterObj = obj.AddComponent<MonsterObject>();
+
         monsterObj.InitInfo(info);
 
         //告诉管理器 怪物数量加1

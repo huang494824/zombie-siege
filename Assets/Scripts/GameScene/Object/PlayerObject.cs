@@ -121,10 +121,13 @@ public class PlayerObject : MonoBehaviour
             if (monster != null && !monster.isDead)
             {
                 //进行打击特效的创建
-                GameObject effObj = Instantiate(Resources.Load<GameObject>(GameDataMgr.Instance.nowSelRole.hitEff));
-                effObj.transform.position = hits[i].point;
-                effObj.transform.rotation = Quaternion.LookRotation(hits[i].normal);
-                Destroy(effObj, 1);
+                //GameObject effObj = Instantiate(Resources.Load<GameObject>(GameDataMgr.Instance.nowSelRole.hitEff));
+                //effObj.transform.position = hits[i].point;
+                //effObj.transform.rotation = Quaternion.LookRotation(hits[i].normal);
+                //Destroy(effObj, 1);
+
+                GameObject effObj = PoolMgr.Instance.GetObj(GameDataMgr.Instance.nowSelRole.hitEff,hits[i].point,Quaternion.LookRotation(hits[i].normal));
+                PoolMgr.Instance.PushObj(effObj, 1);
 
                 monster.Wound(this.atk);
                 break;
