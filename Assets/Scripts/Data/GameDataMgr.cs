@@ -63,16 +63,25 @@ public class GameDataMgr
         JsonMgr.Instance.SaveData(playerData, "PlayerData");
     }
 
+    //public void PlaySound(string resName)
+    //{
+    //    GameObject musicObj = new GameObject();
+    //    AudioSource a = musicObj.AddComponent<AudioSource>();
+    //    a.clip =Resources.Load<AudioClip>(resName);
+    //    a.volume = musicData.soundValue;
+    //    a.mute = !musicData.soundOpen;
+    //    a.Play();
+
+    //    GameObject.Destroy(musicObj, 1);
+    //}
+
     public void PlaySound(string resName)
     {
-        GameObject musicObj = new GameObject();
-        AudioSource a = musicObj.AddComponent<AudioSource>();
-        a.clip =Resources.Load<AudioClip>(resName);
-        a.volume = musicData.soundValue;
-        a.mute = !musicData.soundOpen;
-        a.Play();
-
-        GameObject.Destroy(musicObj, 1);
+        PoolMgr.Instance.PlaySound(
+            resName,
+            musicData.soundValue,
+            !musicData.soundOpen
+        );
     }
 
 
