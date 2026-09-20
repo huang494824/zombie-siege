@@ -146,18 +146,33 @@ public class GameLevelMgr
     /// <param name="pos"></param>
     /// <param name="range"></param>
     /// <returns></returns>
-    public List<MonsterObject> FindMonsters(Vector3 pos, int range)
+    //public List<MonsterObject> FindMonsters(Vector3 pos, int range)
+    //{
+    //    //去寻找满足条件的所有怪物 并且把他们记录在一个列表中
+    //    List<MonsterObject> list = new List<MonsterObject>();
+    //    for (int i = 0; i < monsterList.Count; i++)
+    //    {
+    //        if (!monsterList[i].isDead && Vector3.Distance(pos, monsterList[i].transform.position) <= range)
+    //        {
+    //           list.Add(monsterList[i]);
+    //        }
+    //    }
+    //    return list;
+    //}
+
+    public void FindMonsters(Vector3 pos, int range, List<MonsterObject> list)
     {
-        //去寻找满足条件的所有怪物 并且把他们记录在一个列表中
-        List<MonsterObject> list = new List<MonsterObject>();
+        //复用外部传入的列表 避免每帧创建新List
+        list.Clear();
+
         for (int i = 0; i < monsterList.Count; i++)
         {
-            if (!monsterList[i].isDead && Vector3.Distance(pos, monsterList[i].transform.position) <= range)
+            if (!monsterList[i].isDead &&
+                Vector3.Distance(pos, monsterList[i].transform.position) <= range)
             {
-               list.Add(monsterList[i]);
+                list.Add(monsterList[i]);
             }
         }
-        return list;
     }
 
     /// <summary>

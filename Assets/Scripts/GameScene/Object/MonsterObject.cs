@@ -19,8 +19,11 @@ public class MonsterObject : MonoBehaviour
 
     //上一次攻击的时间
     private float frontTime = 0;
-    
-    
+
+    //攻击检测结果缓存 主塔层通常只有少量碰撞体
+    private Collider[] atkColliders = new Collider[4];
+
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -28,18 +31,31 @@ public class MonsterObject : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
-    //初始化
+
     public void InitInfo(MonsterInfo info)
     {
         monsterInfo = info;
-        //状态机加载
-        animator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>(info.animator);
-        //要变的当前血量
+
+        //每次从池中取出时重置怪物状态
+        isDead = false;
+        frontTime = 0;
+
+        //状态机加载和重置
+        animator.runtimeAnimatorController =
+            Resources.Load<RuntimeAnimatorController>(info.animator);
+        animator.Rebind();
+        animator.Update(0);
+
+        //重置血量
         hp = info.hp;
-        //速度和加速度赋值 之所以复制一样，是希望没有 明显的加速运动 而是一个匀速运动 初始化
+
+        //死亡时关闭过寻路组件 复用时需要重新开启
+        if (!agent.enabled)
+            agent.enabled = true;
+
         agent.speed = agent.acceleration = info.moveSpeed;
-        //旋转速度
         agent.angularSpeed = info.roundSpeed;
+        agent.isStopped = false;
     }
 
     //受伤
@@ -82,22 +98,19 @@ public class MonsterObject : MonoBehaviour
         GameLevelMgr.Instance.player.AddMoney(10);
     }
 
-    //死亡动画播放完毕后 会调用的事件方法
     public void DeadEvent()
     {
-        //死亡动画播放完毕后移除对象
-        //GameLevelMgr.Instance.ChangeMonsterNum(-1);
-
-        //从列表中移除怪物
+        //从怪物列表中移除
         GameLevelMgr.Instance.RemoveMonster(this);
 
-        //在场景中移除已经死亡的对象
-        Destroy(this.gameObject);
+        //先判断游戏是否结束 再回收怪物
+        bool isOver = GameLevelMgr.Instance.CheckOver();
 
-        //怪物死亡时 检测 游戏是否胜利
-        if (GameLevelMgr.Instance.CheckOver())
+        //放回对象池 不再销毁
+        PoolMgr.Instance.PushObj(gameObject);
+
+        if (isOver)
         {
-            //显示结束界面
             GameOverPanel panel = UIManager.Instance.ShowPanel<GameOverPanel>();
             panel.InitInfo(GameLevelMgr.Instance.player.money, true);
         }
@@ -133,17 +146,21 @@ public class MonsterObject : MonoBehaviour
 
     public void AtkEvent()
     {
-        //范围检测 进行伤害判断
-        Collider[] colliders = Physics.OverlapSphere(this.transform.position + transform.forward + transform.up, 1, 1 << LayerMask.NameToLayer("MainTower"));
+        //使用缓存数组进行范围检测 避免每次创建新数组
+        int colliderNum = Physics.OverlapSphereNonAlloc(
+            this.transform.position + transform.forward + transform.up,
+            1,
+            atkColliders,
+            1 << LayerMask.NameToLayer("MainTower")
+        );
 
         //播放音效
         GameDataMgr.Instance.PlaySound("Music/Eat");
 
-        for (int i = 0; i < colliders.Length; i++)
+        for (int i = 0; i < colliderNum; i++)
         {
-            if (colliders[i].gameObject == MainTowerObject.Instance.gameObject)
+            if (atkColliders[i].gameObject == MainTowerObject.Instance.gameObject)
             {
-                //让保护区域受到伤害
                 MainTowerObject.Instance.Wound(monsterInfo.atk);
             }
         }

@@ -17,7 +17,8 @@ public class TowerObject : MonoBehaviour
     //当前要攻击的目标
     private MonsterObject targetObj;
     //当前要攻击的目标们
-    private List<MonsterObject> targetObjs;
+    //private List<MonsterObject> targetObjs;
+    private List<MonsterObject> targetObjs = new List<MonsterObject>();
 
     //用于计时的 用来判断攻击间隔时间
     private float nowTime;
@@ -45,7 +46,8 @@ public class TowerObject : MonoBehaviour
                 targetObj.isDead ||
                 Vector3.Distance(targetObj.transform.position, this.transform.position) > info.atkRange)
             {
-                targetObj = GameLevelMgr.Instance.FindMonster(this.transform.position, info.atkRange);
+                //targetObj = GameLevelMgr.Instance.FindMonster(this.transform.position, info.atkRange);
+                targetObj = GameLevelMgr.Instance.FindMonster(this.transform.position,info.atkRange);
             }
 
             //如果没有找到任何可以攻击的对象 那么炮台就不应该旋转
@@ -66,8 +68,11 @@ public class TowerObject : MonoBehaviour
                 //播放音效
                 GameDataMgr.Instance.PlaySound("Music/Tower");
                 //创建开火特效
-                GameObject effObj = Instantiate(Resources.Load<GameObject>(info.eff), gunPoint.position, gunPoint.rotation);
-                Destroy(effObj, 0.2f);
+                //GameObject effObj = Instantiate(Resources.Load<GameObject>(info.eff), gunPoint.position, gunPoint.rotation);
+                //Destroy(effObj, 0.2f);
+
+                GameObject effObj = PoolMgr.Instance.GetObj(info.eff,gunPoint.position,gunPoint.rotation);
+                PoolMgr.Instance.PushObj(effObj, 0.2f);
 
                 //记录开火时间
                 nowTime = Time.time;
@@ -76,17 +81,21 @@ public class TowerObject : MonoBehaviour
         //群体攻击逻辑
         else
         {
-            targetObjs = GameLevelMgr.Instance.FindMonsters(this.transform.position, info.atkRange);
+            GameLevelMgr.Instance.FindMonsters(this.transform.position,info.atkRange,targetObjs);
 
-            if(targetObjs.Count>0 &&
+            if (targetObjs.Count>0 &&
                 Time.time - nowTime >= info.offsetTime)
             {
                 //创建开火特效
-                GameObject effObj = Instantiate(Resources.Load<GameObject>(info.eff), gunPoint.position, gunPoint.rotation);
-                //延迟移除特效
-                Destroy(effObj, 0.2f);
+                //GameObject effObj = Instantiate(Resources.Load<GameObject>(info.eff), gunPoint.position, gunPoint.rotation);
+                ////延迟移除特效
+                //Destroy(effObj, 0.2f);
+
+                GameObject effObj = PoolMgr.Instance.GetObj(info.eff, gunPoint.position, gunPoint.rotation);
+                PoolMgr.Instance.PushObj(effObj, 0.2f);
+
                 //让目标们受伤
-                for(int i = 0; i < targetObjs.Count; i++)
+                for (int i = 0; i < targetObjs.Count; i++)
                 {
                     targetObjs[i].Wound(info.atk);
                 }

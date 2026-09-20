@@ -26,6 +26,12 @@ public class PlayerObject : MonoBehaviour
     [SerializeField]
     private float shootRadius = 0.25f;
 
+    //近战检测结果缓存 避免每次攻击创建新数组
+    private Collider[] knifeColliders = new Collider[32];
+
+    //射击检测结果缓存 避免每次射击创建新数组
+    private RaycastHit[] shootHits = new RaycastHit[32];
+
     /// <summary>
     /// 初始化玩家基础属性
     /// </summary>
@@ -77,16 +83,22 @@ public class PlayerObject : MonoBehaviour
     /// </summary>
     public void KnifeEvent()
     {
-        //进行伤害检测
-        Collider[] colliders = Physics.OverlapSphere(this.transform.position + this.transform.forward + this.transform.up, 1, 1 << LayerMask.NameToLayer("Monster"));
+        //使用缓存数组进行范围检测 避免每次创建新数组
+        int colliderNum = Physics.OverlapSphereNonAlloc(
+            this.transform.position + this.transform.forward + this.transform.up,
+            1,
+            knifeColliders,
+            1 << LayerMask.NameToLayer("Monster")
+        );
 
         //播放音效
         GameDataMgr.Instance.PlaySound("Music/Knife");
-        
-        for(int i = 0; i < colliders.Length; i++)
+
+        for (int i = 0; i < colliderNum; i++)
         {
-            //得到碰撞到的对象上的怪物脚本 让其受伤
-            MonsterObject monster = colliders[i].gameObject.GetComponent<MonsterObject>();
+            MonsterObject monster =
+                knifeColliders[i].gameObject.GetComponent<MonsterObject>();
+
             if (monster != null && !monster.isDead)
             {
                 monster.Wound(this.atk);
@@ -97,15 +109,15 @@ public class PlayerObject : MonoBehaviour
 
     public void ShootEvent()
     {
-        //进行射线检测
-        //前提是需要有开火点
-        // 使用角色根节点加固定高度，避免枪口后坐力影响射线
+        //使用角色根节点加固定高度 避免枪口后坐力影响射线
         Vector3 rayOrigin = transform.position + transform.up * shootRayHeight;
         Ray ray = new Ray(rayOrigin, transform.forward);
-        //球形射线检测
-        RaycastHit[] hits = Physics.SphereCastAll(
+
+        //使用缓存数组进行球形射线检测 避免每次创建新数组
+        int hitNum = Physics.SphereCastNonAlloc(
             ray,
             shootRadius,
+            shootHits,
             1000f,
             1 << LayerMask.NameToLayer("Monster"),
             QueryTriggerInteraction.Collide
@@ -114,17 +126,20 @@ public class PlayerObject : MonoBehaviour
         //播放开枪音效
         GameDataMgr.Instance.PlaySound("Music/Gun");
 
-        for (int i=0; i < hits.Length; i++)
+        for (int i = 0; i < hitNum; i++)
         {
-            //得到碰撞到的对象上的怪物脚本 让其受伤
-            MonsterObject monster = hits[i].collider.gameObject.GetComponent<MonsterObject>();
+            MonsterObject monster =
+                shootHits[i].collider.gameObject.GetComponent<MonsterObject>();
+
             if (monster != null && !monster.isDead)
             {
-                //进行打击特效的创建
-                GameObject effObj = Instantiate(Resources.Load<GameObject>(GameDataMgr.Instance.nowSelRole.hitEff));
-                effObj.transform.position = hits[i].point;
-                effObj.transform.rotation = Quaternion.LookRotation(hits[i].normal);
-                Destroy(effObj, 1);
+                GameObject effObj = PoolMgr.Instance.GetObj(
+                    GameDataMgr.Instance.nowSelRole.hitEff,
+                    shootHits[i].point,
+                    Quaternion.LookRotation(shootHits[i].normal)
+                );
+
+                PoolMgr.Instance.PushObj(effObj, 1);
 
                 monster.Wound(this.atk);
                 break;
