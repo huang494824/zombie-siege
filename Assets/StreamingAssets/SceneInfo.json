@@ -1,5 +1,5 @@
 [
 {"id":1,"imgRes":"SceneImg/GameScene1","name":"疯狂树林","tips":"被诡异病毒侵蚀的幽暗森林，茂密树木遮挡视野，废弃营地中潜伏着大量丧尸。","sceneName":"GameScene1","money":200,"towerHp":200},
 {"id":2,"imgRes":"SceneImg/GameScene2","name":"极寒雪地","tips":"终年被暴雪覆盖的冰封荒原，低温与风雪让行动更加困难。","sceneName":"GameScene2","money":200,"towerHp":100},
-{"id":3,"imgRes":"SceneImg/GameScene3","name":"熔岩旱土","tips":"遍布裂缝与熔岩的灼热废土，空气中弥漫着灰烬，危险的岩浆限制了移动路线。","sceneName":"GameScene3","money":200,"towerHp":9999}
+{"id":3,"imgRes":"SceneImg/GameScene3","name":"熔岩旱土","tips":"遍布裂缝与熔岩的灼热废土，空气中弥漫着灰烬，危险的岩浆限制了移动路线。","sceneName":"GameScene3","money":200,"towerHp":100}
 ]
