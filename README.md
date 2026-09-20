@@ -308,7 +308,7 @@ Assets/StreamingAssets/RoleInfo.json
 | ---- | ------------ | -----: | ----------: |
 | 疯狂树林 | `GameScene1` |    200 |         200 |
 | 极寒雪地 | `GameScene2` |    200 |         100 |
-| 熔岩旱土 | `GameScene3` |    200 |        9999 |
+| 熔岩旱土 | `GameScene3` |    200 |         100 |
 
 关卡配置位于：
 
